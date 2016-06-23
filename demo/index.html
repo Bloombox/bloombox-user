@@ -12,18 +12,37 @@
     <link rel="import" href="../bloombox-user.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
+      .toolbar-demo {
+        --demo-snippet-demo: {
+          background-color: #4c9d2f;
+        };
+      }
     </style>
   </head>
   <body>
-
     <div class="vertical-section-container centered">
-      <h3>Basic bloombox-user Demo</h3>
-      <demo-snippet>
+      <h3>Active user (normal display mode)</h3>
+      <demo-snippet class='toolbar-demo'>
         <template>
-          <bloombox-user></bloombox-user>
+          <bloombox-user
+            name='John Doe'
+            email='john.doe@domain.com'
+            photo='https://lh5.googleusercontent.com/-hdqCivz5y4I/AAAAAAAAAAI/AAAAAAAAAZ8/orvrIMNGHmU/photo.jpg'
+            display-mode='normal'></bloombox-user>
         </template>
       </demo-snippet>
     </div>
-
+    <div class="vertical-section-container centered">
+      <h3>Active user (slim display mode)</h3>
+      <demo-snippet class='toolbar-demo'>
+        <template>
+          <bloombox-user
+            name='John Doe'
+            email='john.doe@domain.com'
+            photo='https://lh5.googleusercontent.com/-hdqCivz5y4I/AAAAAAAAAAI/AAAAAAAAAZ8/orvrIMNGHmU/photo.jpg'
+            display-mode='normal'></bloombox-user>
+        </template>
+      </demo-snippet>
+    </div>
   </body>
 </html>
