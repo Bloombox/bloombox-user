@@ -18,12 +18,12 @@ all: build
 
 build: $(TARGET) $(ENV) dependencies
 	@mkdir -p $(TARGET)/
-	@cp -fr ./*.html ./bower.json ./demo ./README.md $(TARGET)/;
+	@cp -fr ./*.html ./bower.json ./demo ./README.md ./assets $(TARGET)/;
 	@echo "Project build complete."
 
 quickbuild:
 	@echo "Quickbuilding..."
-	@cp -fr ./*.html ./bower.json ./demo ./README.md $(TARGET)/;
+	@cp -fr ./*.html ./bower.json ./demo ./README.md ./assets $(TARGET)/;
 
 release: build
 	@echo "Building release package..."

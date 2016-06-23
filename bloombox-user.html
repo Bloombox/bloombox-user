@@ -9,16 +9,16 @@
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../bloombox-styles/bloombox-styles.html">
 
 
 <dom-module id="bloombox-user">
   <template>
-    <style>
+    <style is="custom-style" include="bloombox-styles">
       :host {
-        margin-left: 1em;
-        display: inline-block;
-        height: 100%;
+        display: block;
         min-width: 60px;
+        font: 'Lato', sans-serif;
       }
 
       .profile-value {
@@ -33,11 +33,10 @@
       #profileContent .profile-name {
         color: white;
         margin-right: 10px;
-        margin-right: 10px;
         line-height: 40px;
         position: relative;
         top: -10px;
-        margin-left: 20px;
+        font-size: 110%;
       }
 
       #profileContent .profile-image {
@@ -46,8 +45,8 @@
       }
 
       #profileContent .profile-image img {
-        -webkit-mask-image: url('/assets/img/graphics/circle-mask.png');
-        mask-image: url('/assets/img/graphics/circle-mask.png');
+        -webkit-mask-image: url('assets/images/circle-mask.png');
+        mask-image: url('assets/images/circle-mask.png');
         border-radius: 20px;
         max-width: 40px;
       }
