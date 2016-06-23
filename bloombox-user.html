@@ -1,27 +1,133 @@
+
+<!--
+`<bloombox-user>` displays the currently logged-in user and their profile image.
+
+@group Bloombox Elements
+@element bloombox-user
+@demo demo/index.html
+@homepage bloombox.github.io
+-->
+
 <link rel="import" href="../polymer/polymer.html">
+
 
 <dom-module id="bloombox-user">
   <template>
     <style>
       :host {
-        display: block;
+        margin-left: 1em;
+        display: inline-block;
+        height: 100%;
+        min-width: 60px;
+      }
+
+      .profile-value {
+        display: inline-block;
+      }
+
+      #profileContent {
+        margin-right: 15px;
+        text-align: right;
+      }
+
+      #profileContent .profile-name {
+        color: white;
+        margin-right: 10px;
+        margin-right: 10px;
+        line-height: 40px;
+        position: relative;
+        top: -10px;
+        margin-left: 20px;
+      }
+
+      #profileContent .profile-image {
+        position: relative;
+        top: 4px;
+      }
+
+      #profileContent .profile-image img {
+        -webkit-mask-image: url('/assets/img/graphics/circle-mask.png');
+        mask-image: url('/assets/img/graphics/circle-mask.png');
+        border-radius: 20px;
+        max-width: 40px;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+
+    <div id="profileContent">
+      <template is="dom-if" if="[[_showName]]">
+        <div class="profile-value profile-name">[[name]]</div>
+      </template>
+      <div class="profile-value profile-image">
+        <img src="[[image]]" />
+      </div><!-- end div.profile-value.profile-image -->
+    </div><!-- end #profileContent -->
   </template>
 
   <script>
-    Polymer({
-
+    Polymer.BloomboxUser = Polymer({
       is: 'bloombox-user',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'bloombox-user',
+        /**
+         * State flag that is flipped to `true` when the active `displayMode` is
+         * set to a value that should show a user's full name in addition to their
+         * profile image.
+         */
+        _showName: {
+          type: Boolean,
+          notify: true,
+          computed: '_shouldShowName(displayMode)'
         },
+
+        /**
+         * Visual display mode of the widget. Options are `normal` and `slim`:
+         * - `normal`: Display the user's full name and profile image
+         * - `slim`: Display only the user's profile image
+         */
+        displayMode: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true,
+          value: "normal"
+        },
+
+        /**
+         * Absolute URL to the user's profile image. Usually provided by OAuth
+         * identifying partners like Google and Microsoft.
+         */
+        image: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        },
+
+        /**
+         * The user's email address, so it can be displayed in certain
+         * circumstances.
+         */
+        email: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        },
+
+        /**
+         * The user's full name, so it can be displayed in certain circumstances.
+         */
+        name: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        }
       },
 
+      /**
+       * Render function that decies whether to show the user's full name, based
+       * on the active `displayMode`.
+       */
+      _shouldShowName: function(displayMode) {
+        return displayMode == "normal";
+      }
     });
   </script>
 </dom-module>
