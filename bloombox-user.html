@@ -24,6 +24,7 @@
 
       .profile-value {
         display: inline-block;
+        min-height: 40px;
       }
 
       #profileContent {
@@ -97,7 +98,7 @@
         image: {
           type: String,
           notify: true,
-          reflectToAttribute: true
+          value: "//storage.googleapis.com/bloombox-user/v1/user-placeholder.jpg"
         },
 
         /**
@@ -106,8 +107,7 @@
          */
         email: {
           type: String,
-          notify: true,
-          reflectToAttribute: true
+          notify: true
         },
 
         /**
@@ -125,7 +125,7 @@
        * on the active `displayMode`.
        */
       _shouldShowName: function(displayMode) {
-        return displayMode == "normal";
+        return displayMode != "slim";
       }
     });
   </script>
