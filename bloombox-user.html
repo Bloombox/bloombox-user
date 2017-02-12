@@ -1,6 +1,24 @@
 
 <!--
-`<bloombox-user>` displays the currently logged-in user and their profile image.
+`<bloombox-user>` displays the currently logged-in user and their profile image. It presents a
+few options for displaying the user's name/profile image/email, and abilities to style those sub-elements.
+
+### Display modes
+There are three display states supported by the component. They are enumerated in the enum type `BloomboxUserDisplayMode`, and below:
+- `normal`: Suitable for use in the top-right header of an application.
+- `slim`: Same as `normal`, but with textual content omitted.
+- `inline`: Usable completely inline with a mini name and profile image.
+
+### Styling
+`<bloombox-user>` provides the following custom properties and mixins for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--user-color` | Foreground color | `white`
+`--user-font-size` | Font size of any displayed text | `12pt`
+`--user-image-size` | Width/height value of the user's image, if any | `40px`
+`--user-margins` | Margin to the left of whatever is displayed by this component | `3px`
+`--user-inner-margin` | Inside margin between the user's name and image, if any | `4px`
 
 @group Bloombox Elements
 @element bloombox-user
@@ -9,6 +27,9 @@
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/social-icons.html">
 <link rel="import" href="../bloombox-styles/bloombox-styles.html">
 
 
@@ -18,60 +39,173 @@
       :host {
         display: block;
         min-width: 60px;
-        font: 'Lato', sans-serif;
-        color: white;
-      }
-
-      .profile-value {
-        display: inline-block;
-        min-height: 40px;
-      }
-
-      #profileContent {
-        margin-right: 15px;
-        text-align: right;
-      }
-
-      #profileContent .profile-name {
-        margin-right: 10px;
-        line-height: 40px;
-        position: relative;
-        top: -10px;
-        font-size: 12pt;
-        cursor: default;
+        font-family: var(--bloombox-typography-primary);
         font-weight: 300;
+        font-size: var(--user-font-size, inherit);
+        color: var(--user-color, white);
       }
 
-      #profileContent .profile-image {
+      /* -- Profile -- */
+      :host .profile-value {
+        display: inline-block;
+      }
+
+      :host #profileContent {
+        text-align: right;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      :host #profileContent .profile-name {
+        margin-right: 10px;
         position: relative;
-        top: 4px;
+        font-size: var(--user-font-size, 12pt);
+        user-select: none;
+        font-weight: 300;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: inline-block;
+        color: var(--user-color, white);
       }
 
-      #profileContent .profile-image img {
+      :host #profileContent.user-without-image .profile-name {
+        margin-right: 0;
+      }
+
+      :host #profileContent .profile-image {
+        width: var(--user-image-size, 40px);
+        height: var(--user-image-size, 40px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      :host .profile-link {
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--user-color, white);
+      }
+
+      :host #profileContent .profile-image img {
         border-radius: 20px;
-        max-width: 40px;
+        width: var(--user-image-size, 40px);
+      }
+
+      :host #profileContent .profile-image iron-icon {
+        --iron-icon-height: 32px;
+        --iron-icon-width: 32px;
+      }
+
+      /** -- Render Mode: Inline -- **/
+      :host #profileContent.render-mode-inline {
+        height: auto;
+        display: inline;
+      }
+
+      :host #profileContent.render-mode-inline .profile-name {
+        text-decoration: underline;
+        margin-right: var(--user-inner-margin, 4px);
+        margin-left: var(--user-margins, 3px);
+      }
+
+      :host #profileContent.render-mode-inline .profile-link {
+        cursor: pointer;
+        pointer-events: inherit;
+        text-decoration: underline;
+      }
+
+      :host #profileContent.render-mode-inline .profile-image {
+        width: var(--user-image-size, 24px);
+        height: var(--user-image-size, 24px);
+        margin-right: var(--user-margins, 3px);
+        display: inline;
+      }
+
+      :host #profileContent.render-mode-inline .profile-image img {
+        width: var(--user-image-size, 24px);
+        height: var(--user-image-size, 24px);
+        margin-bottom: -6px;
+      }
+
+      :host #profileContent.render-mode-inline .profile-image iron-icon {
+        width: var(--user-image-size, 24px);
+        height: var(--user-image-size, 24px);
+        margin-bottom: 4px;
       }
     </style>
 
-    <div id="profileContent">
-      <template is="dom-if" if="[[_showName]]">
-        <div class="profile-value profile-name">[[name]]</div>
-      </template>
-      <div class="profile-value profile-image">
-        <img src="[[image]]" />
-      </div><!-- end div.profile-value.profile-image -->
-    </div><!-- end #profileContent -->
+    <a id="profileLink" class="profile-link">
+      <div id="profileContent" class$="[[_userClass]]">
+        <div class="profile-value profile-name" hidden$="[[!_showName]]">[[name]]</div>
+        <div class="profile-value profile-image">
+          <iron-icon
+            icon="social:person"
+            hidden$="[[_userImage]]"></iron-icon>
+          <template is="dom-if" if="[[_userImage]]">
+            <img src="[[_userImage]]" />
+          </template>
+        </div><!-- end div.profile-value.profile-image -->
+      </div><!-- end #profileContent -->
+    </a><!-- end a.profile-link -->
   </template>
 
-  <script>
-    Polymer.BloomboxUser = Polymer({
+  <script type="text/javascript">
+    "use strict";
+
+    /**
+     * Enumerates display mode options for the `<bloombox-user>` element.
+     *
+     * @enum {string}
+     */
+    var BloomboxUserDisplayMode = {
+      NORMAL: "normal",
+      SLIM: "slim",
+      INLINE: "inline"
+    };
+
+    /**
+     * Thrown when there is no active profile to navigate to, but navigation
+     * was requested anyway.
+     *
+     * @type {Object}
+     */
+    function NoActiveProfileException() {
+      this.name = "NoActiveProfileException";
+      this.message = "No active profile was found, but navigation was requested.";
+    }
+
+    /**
+     * `<bloombox-user>`
+     */
+    var BloomboxUser = Polymer.BloomboxUser = Polymer({
       is: 'bloombox-user',
+
+      /**
+       * Fired when a profile widget is clicked, and navigation to the subject
+       * user's profile is desired.
+       *
+       * @event profile-navigate
+       * @param {string} key Underlying object key of the target profile.
+       * @param {string} username Username of the target profile.
+       */
+
+      listeners: {
+        "profileLink.tap": "navigateToProfile"
+      },
+
+      observers: [
+        "_userImageShouldChange(image, email)"
+      ],
 
       properties: {
         /**
          * State flag that is flipped to `true` when the active `displayMode` is
          * set to a value that should show a user's full name in addition to their
          * profile image.
+         *
+         * @type {boolean}
          */
         _showName: {
           type: Boolean,
@@ -80,30 +214,75 @@
         },
 
         /**
+         * Calculate a set of top-level widget classes to apply, based on the
+         * component's display mode.
+         *
+         * @type {boolean}
+         */
+        _userClass: {
+          type: Boolean,
+          notify: true,
+          computed: "_computeUserClass(displayMode, key, image)"
+        },
+
+        /**
+         * Calculate the image to use for a user profile, based on whether we
+         * have an explicit Bloombox avatar, a usable Gravatar, or nothing at
+         * all.
+         *
+         * @type {string}
+         */
+        _userImage: {
+          type: String,
+          notify: true,
+          readOnly: true
+        },
+
+        /**
          * Visual display mode of the widget. Options are `normal` and `slim`:
          * - `normal`: Display the user's full name and profile image
          * - `slim`: Display only the user's profile image
+         * - `inline`: Display the information inline, like a `span`
+         *
+         * @type {BloomboxUserDisplayMode}
          */
         displayMode: {
           type: String,
           notify: true,
           reflectToAttribute: true,
-          value: "normal"
+          value: "normal",
+          observer: "_displayModeDidChange"
+        },
+
+        /**
+         * Opaque key referencing this user. Provided by underlying storage when
+         * a new user account is created.
+         *
+         * @type {string}
+         */
+        key: {
+          type: String,
+          notify: true,
+          value: null
         },
 
         /**
          * Absolute URL to the user's profile image. Usually provided by OAuth
          * identifying partners like Google and Microsoft.
+         *
+         * @type {string}
          */
         image: {
           type: String,
           notify: true,
-          value: "//storage.googleapis.com/bloombox-user/v1/user-placeholder.jpg"
+          value: null
         },
 
         /**
          * The user's email address, so it can be displayed in certain
          * circumstances.
+         *
+         * @type {string}
          */
         email: {
           type: String,
@@ -112,8 +291,22 @@
 
         /**
          * The user's full name, so it can be displayed in certain circumstances.
+         *
+         * @type {string}
          */
         name: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        },
+
+        /**
+         * The user's globalized username, so we may navigate to their profile
+         * and calculate a user image if none was provided.
+         *
+         * @type {string}
+         */
+        username: {
           type: String,
           notify: true,
           reflectToAttribute: true
@@ -121,11 +314,124 @@
       },
 
       /**
-       * Render function that decies whether to show the user's full name, based
+       * Render function that decides whether to show the user's full name, based
        * on the active `displayMode`.
+       *
+       * @param {BloomboxUserDisplayMode} displayMode Current display mode.
+       * @returns {boolean} Whether we should show the user's name.
        */
       _shouldShowName: function(displayMode) {
         return displayMode != "slim";
+      },
+
+      /**
+       * Compute a set of top-level classes to apply to the widget, based on the
+       * value of `displayMode`.
+       *
+       * @param {BloomboxUserDisplayMode} displayMode Current display mode.
+       * @param {string?} key Underlying storage key for the user, or `null`.
+       * @param {string?} image User's image, if any.
+       * @returns {string} Classes to apply to the widget.
+       */
+      _computeUserClass: function(displayMode, key, image) {
+        var classes = [
+          "user-widget",
+          "render-mode-" + displayMode.toLowerCase(),
+          key !== null ? "persisted-user" : "unpersisted-user",
+          image !== null ? "user-with-image" : "user-without-image"];
+        return classes.join(" ");
+      },
+
+      /**
+       * Resolve a Gravatar URL for displaying a user's profile avatar.
+       *
+       * @param {string} email User's email address, for use with Gravatar.
+       */
+      _resolveGravatar: function(email) {
+        var generator = window["gravatar"],
+            avatar = window["avatar"];
+        if (!generator) {
+          console.warn("Unable to resolve Gravatar URL generator.");
+        } else {
+          generator(email, function(link) {
+            if (!avatar) {
+              console.warn("Unable to resolve avatar handler.");
+            } else {
+              avatar(link, function(blob) {
+                console.log("Resolved user avatar.", email, link, blob);
+              });
+            }
+          });
+        }
+      },
+
+      /**
+       * Resolve a URL to use to display a user's portrait, considering the options
+       * of an explicit Bloombox avatar, a Gravatar, or nothing at all.
+       *
+       * @param {string} image Explicit, Bloombox-internal avatar, if any.
+       * @param {string} email User's email address, for use with Gravatar.
+       */
+      _userImageShouldChange: function(image, email) {
+        if (image !== null)
+          this._set_userImage(image);
+        if (email !== null)
+          this._resolveGravatar(email);
+      },
+
+      /**
+       * Property observer, called when the display mode value changes.
+       *
+       * @param {BloomboxUserDisplayMode} newMode Mode we will transition to.
+       * @param {BloomboxUserDisplayMode} oldMode Mode we are transitioning from.
+       */
+      _displayModeDidChange: function(newMode, oldMode) {
+        if (newMode === "inline") {
+          this.style.display = "inline";
+        }
+      },
+
+      /**
+       * Set the local user from an object, rather than invoking directly via
+       * component properties. Accepts a single user object and distributes its
+       * properties according to this component.
+       *
+       * {@param} {Object?} user Current user, if any, or `null`.
+       */
+      setActiveUser: function(user) {
+        if (user !== null) {
+          this.key = user.id;
+          this.email = user.email;
+          this.username = user.username;
+          this.name = user.name.display;
+          this.image = user.image;
+        }
+      },
+
+      /**
+       * Navigate to a target user's profile. Usually dispatched via a Polymer
+       * tap listener on profile links. When called directly with no arguments,
+       * if will invoke navigation to whatever active user is displayed by the
+       * widget.
+       *
+       * @param {Event?} event Browser event, if we are being invoked via a tap.
+       * @throws 
+       */
+      navigateToProfile: function(event) {
+        var target = event ? event.currentTarget.parentElement : this,
+            key = target.key,
+            username = target.username,
+            context = {
+              "key": key,
+              "username": username
+            };
+        if (!key || !username)
+          throw new NoActiveProfileException();
+        console.log("Firing 'profile-navigate'.", {
+          "event": event,
+          "context": context
+        });
+        this.fire("profile-navigate", context);
       }
     });
   </script>

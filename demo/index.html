@@ -18,33 +18,104 @@
 
       .toolbar-demo {
         --demo-snippet-demo: {
-          background-color: #4c9d2f;
+          background-color: #737373;
+          color: white;
         };
       }
     </style>
+    <script>var __debug = window["__debug"] = true;</script>
+    <script type="text/javascript" src="./commons.js"></script>
   </head>
   <body unresolved>
+    <div class="vertical-section-container centered">
+      <h3>No active user (normal display mode)</h3>
+      <demo-snippet class='toolbar-demo'>
+        <template>
+          <bloombox-user
+            display-mode="normal"></bloombox-user>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>No active user (slim display mode)</h3>
+      <demo-snippet class='toolbar-demo'>
+        <template>
+          <bloombox-user
+            display-mode="slim"></bloombox-user>
+        </template>
+      </demo-snippet>
+    </div>
+
     <div class="vertical-section-container centered">
       <h3>Active user (normal display mode)</h3>
       <demo-snippet class='toolbar-demo'>
         <template>
           <bloombox-user
-            name='John Doe'
-            email='john.doe@domain.com'
-            image='https://lh5.googleusercontent.com/-hdqCivz5y4I/AAAAAAAAAAI/AAAAAAAAAZ8/orvrIMNGHmU/photo.jpg'
-            display-mode='normal'></bloombox-user>
+            key="abc123"
+            username="jdoe"
+            name="John Doe"
+            email="john.doe@domain.com"
+            image="https://lh5.googleusercontent.com/-hdqCivz5y4I/AAAAAAAAAAI/AAAAAAAAAZ8/orvrIMNGHmU/photo.jpg"
+            display-mode="normal"></bloombox-user>
         </template>
       </demo-snippet>
     </div>
+
     <div class="vertical-section-container centered">
-      <h3>Active user (slim display mode)</h3>
+      <h3>Active user (Gravatar)</h3>
       <demo-snippet class='toolbar-demo'>
         <template>
           <bloombox-user
-            name='John Doe'
-            email='john.doe@domain.com'
-            image='https://lh5.googleusercontent.com/-hdqCivz5y4I/AAAAAAAAAAI/AAAAAAAAAZ8/orvrIMNGHmU/photo.jpg'
-            display-mode='slim'></bloombox-user>
+            key="abc123"
+            username="jdoe"
+            name="John Doe"
+            email="sam@momentum.io"
+            display-mode="normal"></bloombox-user>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Active user (slim display mode)</h3>
+      <demo-snippet class="toolbar-demo">
+        <template>
+          <bloombox-user
+            key="abc123"
+            username="jdoe"
+            name="John Doe"
+            email="john.doe@domain.com"
+            image="https://lh5.googleusercontent.com/-hdqCivz5y4I/AAAAAAAAAAI/AAAAAAAAAZ8/orvrIMNGHmU/photo.jpg"
+            display-mode="slim"></bloombox-user>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Active user (inline display mode)</h3>
+      <demo-snippet class='toolbar-demo'>
+        <template>
+          <p>The quick generic user <bloombox-user
+            key="abc123"
+            username="jdoe"
+            name="John Doe"
+            email="john.doe@domain.com"
+            image="https://lh5.googleusercontent.com/-hdqCivz5y4I/AAAAAAAAAAI/AAAAAAAAAZ8/orvrIMNGHmU/photo.jpg"
+            display-mode="inline"></bloombox-user> jumped over the lazy dog. Then, some other stuff happened, if only to illustrate further content around a generic inline user HTML5 widget component invocation (okay I'm done now, sorry).</p>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Active user (inline display mode, no image)</h3>
+      <demo-snippet class='toolbar-demo'>
+        <template>
+          <p>The quick generic user <bloombox-user
+            key="abc123"
+            username="jdoe"
+            name="John Doe"
+            email="john.doe@domain.com"
+            display-mode="inline"></bloombox-user> jumped over the lazy dog. Then, some other stuff happened, if only to illustrate further content around a generic inline user HTML5 widget component invocation (okay I'm done now, sorry).</p>
         </template>
       </demo-snippet>
     </div>
@@ -54,9 +125,11 @@
       <demo-snippet class='toolbar-demo'>
         <template>
           <bloombox-user
-            name='John Doe'
-            email='john.doe@domain.com'
-            display-mode='normal'></bloombox-user>
+            key="abc123"
+            username="jdoe"
+            name="John Doe"
+            email="john.doe@domain.com"
+            display-mode="normal"></bloombox-user>
         </template>
       </demo-snippet>
     </div>
@@ -66,9 +139,11 @@
       <demo-snippet class='toolbar-demo'>
         <template>
           <bloombox-user
-            name='John Doe'
-            email='john.doe@domain.com'
-            display-mode='slim'></bloombox-user>
+            key="abc123"
+            username="jdoe"
+            name="John Doe"
+            email="john.doe@domain.com"
+            display-mode="slim"></bloombox-user>
         </template>
       </demo-snippet>
     </div>
