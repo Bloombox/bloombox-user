@@ -5,7 +5,7 @@
   "main": "bloombox-user.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.7.0",
-    "bloombox-styles": "git@github.com:Bloombox/bloombox-styles.git",
+    "bloombox-styles": "git@github.com:Bloombox/bloombox-styles.git#master",
     "iron-icon": "PolymerElements/iron-icon#^1.0.12",
     "iron-icons": "PolymerElements/iron-icons#^1.2.0"
   },
